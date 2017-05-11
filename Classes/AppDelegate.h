@@ -1,3 +1,5 @@
+/* Copyright 2017 Yadu Rajiv */
+
 #ifndef  _APP_DELEGATE_H_
 #define  _APP_DELEGATE_H_
 

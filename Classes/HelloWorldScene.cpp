@@ -1,6 +1,10 @@
+/* Copyright 2017 Yadu Rajiv */
+
 #include "HelloWorldScene.h"
 #include "editor-support/cocostudio/CocoStudio.h"
 #include "ui/CocosGUI.h"
+
+#include "GameResources.h"
 
 USING_NS_CC;
 
@@ -24,7 +28,6 @@ Scene* HelloWorld::createScene()
 // on "init" you need to initialize your instance
 bool HelloWorld::init()
 {
-    /**  you can create scene with following comment code instead of using csb file.
     // 1. super init first
     if ( !Layer::init() )
     {
@@ -58,7 +61,7 @@ bool HelloWorld::init()
     // add a label shows "Hello World"
     // create and initialize a label
     
-    auto label = Label::createWithTTF("Hello World", "fonts/Marker Felt.ttf", 24);
+    auto label = Label::createWithTTF(GameResources::getInstance()->getUIString("hello"), GameResources::getInstance()->getFont(), 24);
     
     // position the label on the center of the screen
     label->setPosition(Vec2(origin.x + visibleSize.width/2,
@@ -66,6 +69,11 @@ bool HelloWorld::init()
 
     // add the label as a child to this layer
     this->addChild(label, 1);
+
+    auto help = cocos2d::ui::Text::create(GameResources::getInstance()->getUIString("help"), GameResources::getInstance()->getFont(), 24);
+    help->setPosition(Vec2(origin.x + visibleSize.width / 2,
+        100));
+    this->addChild(help, 2);
 
     // add "HelloWorld" splash screen"
     auto sprite = Sprite::create("HelloWorld.png");
@@ -75,18 +83,42 @@ bool HelloWorld::init()
 
     // add the sprite as a child to this layer
     this->addChild(sprite, 0);
-    **/
-    
-    //////////////////////////////
-    // 1. super init first
-    if ( !Layer::init() )
-    {
-        return false;
-    }
-    
-    auto rootNode = CSLoader::createNode("MainScene.csb");
+   
+    auto listener = EventListenerKeyboard::create();
+    listener->onKeyReleased = CC_CALLBACK_2(HelloWorld::onKeyReleased, this);
+    Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 
-    addChild(rootNode);
 
     return true;
+}
+
+void HelloWorld::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
+    if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_BACK || keyCode == cocos2d::EventKeyboard::KeyCode::KEY_SPACE) {
+        if (GameResources::getInstance()->settingsUILanguage == "en") {
+            GameResources::getInstance()->settingsUILanguage = "hi";
+        } else if (GameResources::getInstance()->settingsUILanguage == "hi") {
+            GameResources::getInstance()->settingsUILanguage = "ml";
+        } else if (GameResources::getInstance()->settingsUILanguage == "ml") {
+            GameResources::getInstance()->settingsUILanguage = "en";
+        }
+
+        // reload new language strings
+        GameResources::getInstance()->loadStrings(GameResources::getInstance()->settingsUILanguage);
+
+        auto scene = HelloWorld::createScene();
+        Director::getInstance()->replaceScene(TransitionSlideInL::create(0.5f, scene));
+    }
+}
+
+void HelloWorld::menuCloseCallback(cocos2d::Ref* pSender) {
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
+    MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.", "Alert");
+    return;
+#endif
+
+    Director::getInstance()->end();
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    exit(0);
+#endif
 }

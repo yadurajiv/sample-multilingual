@@ -1,5 +1,8 @@
+/* Copyright 2017 Yadu Rajiv */
+
 #include "AppDelegate.h"
 #include "HelloWorldScene.h"
+#include "GameResources.h"
 
 USING_NS_CC;
 
@@ -40,6 +43,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->setAnimationInterval(1.0 / 60);
 
     FileUtils::getInstance()->addSearchPath("res");
+
+    GameResources::getInstance()->loadStrings();
+    GameResources::getInstance()->loadFonts();
 
     // create a scene. it's an autorelease object
     auto scene = HelloWorld::createScene();
