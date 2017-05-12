@@ -94,16 +94,15 @@ bool HelloWorld::init()
 
 void HelloWorld::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event) {
     if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_BACK || keyCode == cocos2d::EventKeyboard::KeyCode::KEY_SPACE) {
-        if (GameResources::getInstance()->settingsUILanguage == "en") {
-            GameResources::getInstance()->settingsUILanguage = "hi";
-        } else if (GameResources::getInstance()->settingsUILanguage == "hi") {
-            GameResources::getInstance()->settingsUILanguage = "ml";
-        } else if (GameResources::getInstance()->settingsUILanguage == "ml") {
-            GameResources::getInstance()->settingsUILanguage = "en";
+        
+        // set new language and reload strings
+        if (GameResources::getInstance()->getUILanguage() == "en") {
+            GameResources::getInstance()->setUILanguage("hi");
+        } else if (GameResources::getInstance()->getUILanguage() == "hi") {
+            GameResources::getInstance()->setUILanguage("ml");
+        } else if (GameResources::getInstance()->getUILanguage() == "ml") {
+            GameResources::getInstance()->setUILanguage("en");
         }
-
-        // reload new language strings
-        GameResources::getInstance()->loadStrings(GameResources::getInstance()->settingsUILanguage);
 
         auto scene = HelloWorld::createScene();
         Director::getInstance()->replaceScene(TransitionSlideInL::create(0.5f, scene));

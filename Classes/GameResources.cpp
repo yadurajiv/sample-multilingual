@@ -61,26 +61,18 @@ std::string GameResources::getFont(std::string langauge, std::string key) {
     return std::string();
 }
 
-std::string GameResources::getUIString(std::string key, std::string langauge) {
-
-    if (langauge.length() <= 0) {
-        langauge = settingsUILanguage;
-    }
+std::string GameResources::getUIString(std::string key) {
 
     // our json was not parsed correctly, return an error string
     if (!gameStrings.IsObject()) {
-        return "ERR_STR_DOC_" + langauge;
+        return "ERR_STR_DOC_" + settingsUILanguage;
     }
 
-    const rapidjson::Value& v = gameStrings[langauge.c_str()];
+    const rapidjson::Value& v = gameStrings[settingsUILanguage.c_str()];
     if (v.HasMember(key.c_str())) {
         return v[key.c_str()].GetString();
     } else {
         // our key is missing, return an error string
-        return "ERR_STR_MISS_" + langauge + "_" + key;
+        return "ERR_STR_MISS_" + settingsUILanguage + "_" + key;
     }
-}
-
-std::string GameResources::getUIString(std::string key) {
-    return getUIString(key, settingsUILanguage);
 }

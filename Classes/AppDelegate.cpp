@@ -44,7 +44,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     FileUtils::getInstance()->addSearchPath("res");
 
-    GameResources::getInstance()->loadStrings();
+    // setting the language auto loads the correct strings
+    GameResources::getInstance()->setUILanguage("en");
+    // load all fonts
     GameResources::getInstance()->loadFonts();
 
     // create a scene. it's an autorelease object
